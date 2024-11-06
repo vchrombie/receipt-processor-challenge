@@ -12,7 +12,7 @@ from points_calculator import (
 
 app = Flask(__name__)
 
-# in-memory storage for receipts
+# In-memory storage for receipts and points
 receipts = {}
 
 

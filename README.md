@@ -4,12 +4,22 @@ Fetch Rewards Receipt Processor Challenge
 
 ---
 
-## Instructions
+## Installation
 
 ```bash
 $ git clone https://github.com/vchrombie/receipt-processor-challenge
 $ cd receipt-processor-challenge
+```
 
+Go
+
+```bash
+$ go run main.go
+```
+
+Python
+
+```bash
 $ docker build -t vchrombie-receipt-processor .
 $ docker run -p 8080:8080 vchrombie-receipt-processor
 ```
