@@ -1,5 +1,6 @@
-from flask import Flask, request, jsonify
 import uuid
+from flask import Flask, request, jsonify
+
 from points_calculator import (
     calculate_retailer_points,
     calculate_total_amount_points,
@@ -35,16 +36,19 @@ def process_receipt():
     receipt_id = str(uuid.uuid4())
     points = calculate_points(data)
     receipts[receipt_id] = points
+    app.logger.info(f"Stored receipt with ID: {receipt_id}, Points: {points}")
     return jsonify({"id": receipt_id})
 
 
-@app.route('/receipts/<receipt_id>/points', methods=['GET'])
+@ app.route('/receipts/<receipt_id>/points', methods=['GET'])
 def get_points(receipt_id):
     if receipt_id in receipts:
+        app.logger.info(f"Retrieving points for ID: {receipt_id}")
         return jsonify({"points": receipts[receipt_id]})
     else:
+        app.logger.error(f"Receipt not found for ID: {receipt_id}")
         return jsonify({"error": "Receipt not found"}), 404
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=8080, debug=True)
