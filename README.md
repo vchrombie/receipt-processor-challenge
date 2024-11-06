@@ -22,6 +22,16 @@ $ curl -X GET http://localhost:5000/receipts/2ee47ba9-ac23-4fdc-96be-d3d8ea96889
 {"points":28}
 ```
 
+## Testing
+
+You can find the unit tests in the [`tests/`](/tests/) directory. You can run
+them using the following commands:
+
+```bash
+$ docker run -p 5000:5000 --name vchrombie_receipt_processor vchrombie-receipt-processor
+$ docker exec -it vchrombie_receipt_processor python -m unittest discover -s tests
+```
+
 ## Endpoints
 
 - POST `/receipts/process`: Accepts a receipt JSON, calculates points, and
