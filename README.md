@@ -11,13 +11,15 @@ $ git clone https://github.com/vchrombie/receipt-processor-challenge
 $ cd receipt-processor-challenge
 ```
 
-Go
+## Running the Server
+
+### Go
 
 ```bash
 $ go run main.go
 ```
 
-Python
+### Python
 
 ```bash
 $ docker build -t vchrombie-receipt-processor .
@@ -38,7 +40,18 @@ $ curl -X GET http://localhost:8080/receipts/2ee47ba9-ac23-4fdc-96be-d3d8ea96889
 
 ## Testing
 
-You can find the unit tests in the [`tests/`](/tests/) directory. You can run
+### Go
+
+You can find the unit tests in the [`main_test.go`](main_test.go) file. You can run them using
+the following command:
+
+```bash
+$ go test
+```
+
+### Python
+
+You can find the unit tests in the [`tests`](/tests/) directory. You can run
 them using the following commands:
 
 ```bash
