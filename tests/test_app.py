@@ -3,7 +3,7 @@ import requests
 import json
 import os
 
-BASE_URL = "http://localhost:5000"  # URL where the Flask app is running
+BASE_URL = "http://localhost:8080"  # URL where the Flask app is running
 
 
 class ReceiptProcessorIntegrationTest(unittest.TestCase):

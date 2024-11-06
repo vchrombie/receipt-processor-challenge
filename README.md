@@ -4,7 +4,7 @@ Fetch Rewards Receipt Processor Challenge
 
 ---
 
-## Installation
+## Instructions
 
 ```bash
 $ git clone https://github.com/vchrombie/receipt-processor-challenge
@@ -42,8 +42,8 @@ $ curl -X GET http://localhost:8080/receipts/2ee47ba9-ac23-4fdc-96be-d3d8ea96889
 
 ### Go
 
-You can find the unit tests in the [`main_test.go`](main_test.go) file. You can run them using
-the following command:
+You can find the unit tests in the [`main_test.go`](main_test.go) file. You can
+run them using the following command:
 
 ```bash
 $ go test
@@ -51,8 +51,8 @@ $ go test
 
 ### Python
 
-You can find the unit tests in the [`tests`](/tests/) directory. You can run
-them using the following commands:
+You can find the tests in the [`tests`](/tests/) directory. You can run them
+using the following commands:
 
 ```bash
 $ docker run -p 8080:8080 --name vchrombie_receipt_processor vchrombie-receipt-processor
