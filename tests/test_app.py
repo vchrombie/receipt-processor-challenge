@@ -31,6 +31,22 @@ class ReceiptProcessorIntegrationTest(unittest.TestCase):
         self.assertIn("id", response_data)
         self.receipt_id = response_data["id"]
 
+    def test_process_receipt_invalid(self):
+        receipt_data = self.load_example_receipt("invalid-receipt.json")
+
+        response = requests.post(
+            f"{BASE_URL}/receipts/process",
+            json=receipt_data
+        )
+
+        self.assertEqual(response.status_code, 400)
+
+        error_data = response.json()
+
+        self.assertIn("error", error_data)
+        self.assertEqual(error_data["error"],
+                         "Missing required field: retailer")
+
     def test_get_points(self):
         receipt_data = self.load_example_receipt("simple-receipt.json")
 
@@ -60,7 +76,3 @@ class ReceiptProcessorIntegrationTest(unittest.TestCase):
 
         self.assertIn("error", error_data)
         self.assertEqual(error_data["error"], "Receipt not found")
-
-
-if __name__ == "__main__":
-    unittest.main()

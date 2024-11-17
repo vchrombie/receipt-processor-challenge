@@ -2,7 +2,8 @@ import uuid
 
 from flask import Flask, request, jsonify
 from utils import (
-    calculate_points
+    calculate_points,
+    validate_receipt,
 )
 
 app = Flask(__name__)
@@ -14,6 +15,14 @@ receipts = {}
 @app.route('/receipts/process', methods=['POST'])
 def process_receipt():
     data = request.json
+
+    # Validate the receipt
+    is_valid, error_message = validate_receipt(data)
+    if not is_valid:
+        app.logger.error(f"Invalid receipt: {error_message}")
+        return jsonify({"error": error_message}), 400
+
+    # Process the valid receipt
     receipt_id = str(uuid.uuid4())
     points = calculate_points(data)
     receipts[receipt_id] = points

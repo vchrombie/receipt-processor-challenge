@@ -63,7 +63,3 @@ class TestCalculatePoints(unittest.TestCase):
             "purchaseDate": "2022-01-01",
             "purchaseTime": "15:00"
         }), 55)
-
-
-if __name__ == '__main__':
-    unittest.main()

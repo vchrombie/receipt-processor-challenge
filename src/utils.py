@@ -1,3 +1,4 @@
+import re
 import math
 
 from datetime import datetime
@@ -99,3 +100,97 @@ def calculate_points(data):
     points += calculate_time_points(data["purchaseTime"])
 
     return points
+
+
+def validate_receipt_retailer(retailer_name):
+    """
+    Validate the retailer field in the receipt data.
+    """
+    if not re.match(r"^[\w\s\-&]+$", retailer_name):
+        return False, f"Invalid retailer format"
+
+    return True, ""
+
+
+def validate_receipt_purchase_date(purchase_date):
+    """
+    Validate the purchaseDate field in the receipt data.
+    """
+    try:
+        datetime.strptime(purchase_date, "%Y-%m-%d")
+    except ValueError:
+        return False, "Invalid purchaseDate format"
+
+    return True, ""
+
+
+def validate_receipt_purchase_time(purchase_time):
+    """
+    Validate the purchaseTime field in the receipt data.
+    """
+    try:
+        datetime.strptime(purchase_time, "%H:%M")
+    except ValueError:
+        return False, "Invalid purchaseTime format"
+
+    return True, ""
+
+
+def validate_receipt_total(total):
+    """
+    Validate the total field in the receipt data.
+    """
+    if not re.match(r"^\d+\.\d{2}$", total):
+        return False, "Invalid total format"
+
+    return True, ""
+
+
+def validate_receipt_items(items):
+    """
+    Validate the items field in the receipt data.
+    """
+    if not isinstance(items, list) or len(items) == 0:
+        return False, "Items must be a non-empty list"
+
+    for item in items:
+        if not isinstance(item, dict):
+            return False, "Each item must be a dictionary"
+
+        if "shortDescription" not in item or "price" not in item:
+            return False, "Each item must have shortDescription and price"
+
+        # Validate shortDescription
+        if not re.match(r"^[\w\s\-]+$", item["shortDescription"]):
+            return False, f"Invalid shortDescription format in items"
+
+        # Validate price
+        if not re.match(r"^\d+\.\d{2}$", item["price"]):
+            return False, "Invalid price format in items"
+
+    return True, ""
+
+
+def validate_receipt(data):
+    """
+    Validate the receipt data against the required schema.
+    """
+    required_fields = ["retailer", "purchaseDate",
+                       "purchaseTime", "items", "total"]
+    for field in required_fields:
+        if field not in data:
+            return False, f"Missing required field: {field}"
+
+    validations = [
+        validate_receipt_retailer(data["retailer"]),
+        validate_receipt_purchase_date(data["purchaseDate"]),
+        validate_receipt_purchase_time(data["purchaseTime"]),
+        validate_receipt_total(data["total"]),
+        validate_receipt_items(data["items"]),
+    ]
+
+    for is_valid, error_message in validations:
+        if not is_valid:
+            return is_valid, error_message
+
+    return True, ""
