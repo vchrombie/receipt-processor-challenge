@@ -1,15 +1,16 @@
 import unittest
-from src.points_calculator import (
+from src.utils import (
     calculate_retailer_points,
     calculate_total_amount_points,
     calculate_item_count_points,
     calculate_item_description_points,
     calculate_date_points,
     calculate_time_points,
+    calculate_points,
 )
 
 
-class TestPointsCalculator(unittest.TestCase):
+class TestCalculatePoints(unittest.TestCase):
 
     def test_calculate_retailer_points(self):
         self.assertEqual(calculate_retailer_points("Walgreens"), 9)
@@ -50,6 +51,18 @@ class TestPointsCalculator(unittest.TestCase):
         self.assertEqual(calculate_time_points("13:00"), 0)
         self.assertEqual(calculate_time_points("14:00"), 10)  # 2:00pm included
         self.assertEqual(calculate_time_points("16:00"), 0)  # 4:00pm excluded
+
+    def test_calculate_points(self):
+        self.assertEqual(calculate_points({
+            "retailer": "Walgreens",
+            "total": "9.25",
+            "items": [
+                {"shortDescription": "Gatorade", "price": "2.25"},
+                {"shortDescription": "Pepsi", "price": "1.25"}
+            ],
+            "purchaseDate": "2022-01-01",
+            "purchaseTime": "15:00"
+        }), 55)
 
 
 if __name__ == '__main__':

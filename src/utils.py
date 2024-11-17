@@ -1,4 +1,5 @@
 import math
+
 from datetime import datetime
 
 
@@ -84,3 +85,17 @@ def calculate_time_points(purchase_time):
     if afternoon_start <= time < afternoon_end:
         return 10
     return 0
+
+
+def calculate_points(data):
+    """Calculate total points based on the provided receipt data."""
+    points = 0
+
+    points += calculate_retailer_points(data["retailer"])
+    points += calculate_total_amount_points(data["total"])
+    points += calculate_item_count_points(len(data["items"]))
+    points += calculate_item_description_points(data["items"])
+    points += calculate_date_points(data["purchaseDate"])
+    points += calculate_time_points(data["purchaseTime"])
+
+    return points
