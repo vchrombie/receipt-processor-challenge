@@ -7,6 +7,7 @@ from src.utils import (
     calculate_date_points,
     calculate_time_points,
     calculate_points,
+    calculate_bonus_points,
 )
 
 
@@ -63,3 +64,10 @@ class TestCalculatePoints(unittest.TestCase):
             "purchaseDate": "2022-01-01",
             "purchaseTime": "15:00"
         }), 55)
+
+    def test_calculate_bonus_points(self):
+        self.assertEqual(calculate_bonus_points(0), 1000)
+        self.assertEqual(calculate_bonus_points(1), 500)
+        self.assertEqual(calculate_bonus_points(2), 250)
+        self.assertEqual(calculate_bonus_points(3), 0)
+        self.assertEqual(calculate_bonus_points(4), 0)

@@ -103,6 +103,22 @@ def calculate_points(data):
     return points
 
 
+def calculate_bonus_points(receipt_count):
+    """
+    Calculate bonus points based on the number of receipts processed.
+    """
+    if receipt_count == 0:
+        points = 1000
+    elif receipt_count == 1:
+        points = 500
+    elif receipt_count == 2:
+        points = 250
+    else:
+        points = 0
+
+    return points
+
+
 def validate_receipt_retailer(retailer_name):
     """
     Validate the retailer field in the receipt data.

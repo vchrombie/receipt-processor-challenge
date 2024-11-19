@@ -5,6 +5,7 @@ from utils import (
     validate_receipt,
     generate_receipt_hash,
     calculate_points,
+    calculate_bonus_points,
 )
 
 app = Flask(__name__)
@@ -42,12 +43,7 @@ def process_receipt():
         users[user_id] = []
 
     receipt_count = len(users[user_id])
-    if receipt_count == 0:
-        points += 1000
-    elif receipt_count == 1:
-        points += 500
-    elif receipt_count == 2:
-        points += 250
+    points += calculate_bonus_points(receipt_count)
 
     # Store the receipt and points
     receipts[receipt_id] = points
