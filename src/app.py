@@ -12,11 +12,14 @@ app = Flask(__name__)
 # In-memory storage for receipts and points
 receipts = {}
 receipt_hashes = {}
+users = {}
 
 
 @app.route('/receipts/process', methods=['POST'])
 def process_receipt():
     data = request.json
+
+    user_id = request.headers.get("User-ID", "default_user")
 
     # Validate the receipt
     is_valid, error_message = validate_receipt(data)
@@ -35,9 +38,21 @@ def process_receipt():
     receipt_id = str(uuid.uuid4())
     points = calculate_points(data)
 
+    if user_id not in users:
+        users[user_id] = []
+
+    receipt_count = len(users[user_id])
+    if receipt_count == 0:
+        points += 1000
+    elif receipt_count == 1:
+        points += 500
+    elif receipt_count == 2:
+        points += 250
+
     # Store the receipt and points
     receipts[receipt_id] = points
     receipt_hashes[receipt_hash] = receipt_id
+    users[user_id].append(receipt_hash)
 
     app.logger.info(f"Stored receipt with ID: {receipt_id}")
     return jsonify({"id": receipt_id})

@@ -30,6 +30,48 @@ class ReceiptProcessorIntegrationTest(unittest.TestCase):
 
         self.assertIn("id", response_data)
 
+    def test_bonus_points_new_users(self):
+
+        receipt_data = self.load_example_receipt("simple-receipt.json")
+        response = requests.post(
+            f"{BASE_URL}/receipts/process",
+            json=receipt_data,
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.id1 = response.json()["id"]
+
+        receipt_data = self.load_example_receipt("receipt-1.json")
+        response = requests.post(
+            f"{BASE_URL}/receipts/process",
+            json=receipt_data,
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.id2 = response.json()["id"]
+
+        receipt_data = self.load_example_receipt("receipt-2.json")
+        response = requests.post(
+            f"{BASE_URL}/receipts/process",
+            json=receipt_data,
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.id3 = response.json()["id"]
+
+        response = requests.get(f"{BASE_URL}/receipts/{self.id1}/points")
+        self.points1 = response.json()["points"]
+
+        response = requests.get(f"{BASE_URL}/receipts/{self.id2}/points")
+        self.points2 = response.json()["points"]
+
+        response = requests.get(f"{BASE_URL}/receipts/{self.id3}/points")
+        self.points3 = response.json()["points"]
+
+        self.assertEqual(self.points1, 1031)  # 1000 bonus + 31 points
+        self.assertEqual(self.points2, 528)  # 500 bonus + 28 points
+        self.assertEqual(self.points3, 359)  # 250 bonus + 109 points
+
     def test_process_invalid_receipt(self):
         receipt_data = self.load_example_receipt("invalid-receipt.json")
 
@@ -85,7 +127,7 @@ class ReceiptProcessorIntegrationTest(unittest.TestCase):
 
         self.assertIsInstance(points_data["points"], int)
         # Expected points for the simple-receipt.json
-        self.assertEqual(points_data["points"], 31)
+        self.assertEqual(points_data["points"], 1031)
 
     def test_get_points_receipt_not_processed(self):
         response = requests.get(f"{BASE_URL}/receipts/invalid-id/points")
