@@ -29,9 +29,8 @@ class ReceiptProcessorIntegrationTest(unittest.TestCase):
         response_data = response.json()
 
         self.assertIn("id", response_data)
-        self.receipt_id = response_data["id"]
 
-    def test_process_receipt_invalid(self):
+    def test_process_invalid_receipt(self):
         receipt_data = self.load_example_receipt("invalid-receipt.json")
 
         response = requests.post(
@@ -47,7 +46,7 @@ class ReceiptProcessorIntegrationTest(unittest.TestCase):
         self.assertEqual(error_data["error"],
                          "Missing required field: retailer")
 
-    def test_get_points(self):
+    def test_get_points_receipt_processed(self):
         receipt_data = self.load_example_receipt("simple-receipt.json")
 
         post_response = requests.post(
@@ -67,7 +66,7 @@ class ReceiptProcessorIntegrationTest(unittest.TestCase):
         # Expected points for the simple-receipt.json
         self.assertEqual(points_data["points"], 31)
 
-    def test_get_points_invalid_id(self):
+    def test_get_points_receipt_not_processed(self):
         response = requests.get(f"{BASE_URL}/receipts/invalid-id/points")
 
         self.assertEqual(response.status_code, 404)

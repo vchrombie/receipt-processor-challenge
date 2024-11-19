@@ -56,6 +56,12 @@ class TestValidateReceipt(unittest.TestCase):
         self.assertFalse(result)
         assert message == "Invalid shortDescription format in items"
 
+        result, message = validate_receipt_items([
+            {"shortDescription": "Gatorade", "price": "2.2"}
+        ])
+        self.assertFalse(result)
+        assert message == "Invalid price format in items"
+
         result, message = validate_receipt_items([])
         self.assertFalse(result)
         assert message == "Items must be a non-empty list"
@@ -71,4 +77,14 @@ class TestValidateReceipt(unittest.TestCase):
                 {"shortDescription": "Pepsi", "price": "1.25"}
             ]
         }))
+        self.assertFalse(validate_receipt({
+            "retailer": "7 - Eleven",
+            "purchaseDate": "2022-01-01",
+            "purchaseTime": "15:00",
+            "total": "9.2",
+            "items": [
+                {"shortDescription": "Gatorade", "price": "2.25"},
+                {"shortDescription": "Pepsi", "price": "1.25"}
+            ]
+        })[0])
         self.assertFalse(validate_receipt({})[0])
