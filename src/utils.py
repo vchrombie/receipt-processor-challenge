@@ -1,5 +1,6 @@
 import re
 import math
+import hashlib
 
 from datetime import datetime
 
@@ -194,3 +195,15 @@ def validate_receipt(data):
             return is_valid, error_message
 
     return True, ""
+
+
+def generate_receipt_hash(data):
+    """
+    Generate a hash for the receipt data.
+    """
+    receipt_string = f"{data['retailer']}_{data['purchaseDate']}_{data['purchaseTime']}_{data['total']}"
+    item_strings = [
+        f"{item['shortDescription']}_{item['price']}" for item in data["items"]
+    ]
+    receipt_string += "_".join(item_strings)
+    return hashlib.sha256(receipt_string.encode('utf-8')).hexdigest()

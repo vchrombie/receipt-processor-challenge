@@ -2,14 +2,16 @@ import uuid
 
 from flask import Flask, request, jsonify
 from utils import (
-    calculate_points,
     validate_receipt,
+    generate_receipt_hash,
+    calculate_points,
 )
 
 app = Flask(__name__)
 
 # In-memory storage for receipts and points
 receipts = {}
+receipt_hashes = {}
 
 
 @app.route('/receipts/process', methods=['POST'])
@@ -22,11 +24,22 @@ def process_receipt():
         app.logger.error(f"Invalid receipt: {error_message}")
         return jsonify({"error": error_message}), 400
 
+    # Check if the receipt has already been processed
+    receipt_hash = generate_receipt_hash(data)
+    if receipt_hash in receipt_hashes:
+        app.logger.info(
+            f"Receipt already processed with ID: {receipt_hashes[receipt_hash]}")
+        return jsonify({"id": receipt_hashes[receipt_hash]})
+
     # Process the valid receipt
     receipt_id = str(uuid.uuid4())
     points = calculate_points(data)
+
+    # Store the receipt and points
     receipts[receipt_id] = points
-    app.logger.info(f"Stored receipt with ID: {receipt_id}, Points: {points}")
+    receipt_hashes[receipt_hash] = receipt_id
+
+    app.logger.info(f"Stored receipt with ID: {receipt_id}")
     return jsonify({"id": receipt_id})
 
 
